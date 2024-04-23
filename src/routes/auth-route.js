@@ -5,13 +5,20 @@ export const router = express.Router()
 const authController = new AuthController()
 
 // read all user
-router.get('/', (req, res, next) => authController.read(req, res, next))
+router.get('/', authController.authorize, (req, res, next) => authController.read(req, res, next))
+
+// read one user
+router.get('/:id', authController.authorize, (req, res, next) => authController.readOne(req, res, next))
 
 // create a user
-router.post('/', (req, res, next) => authController.create(req, res, next))
+router.post('/', authController.authorize, (req, res, next) => authController.create(req, res, next))
 
-// register user
-router.post('/register', (req, res, next) => authController.register(req, res, next))
+// update a user
+router.patch('/:id', authController.authorize, (req, res, next) => authController.update(req, res, next))
+
+
+// delete a user
+router.delete('/:id', authController.authorize, (req, res, next) => authController.delete(req, res, next))
 
 // login
 router.post('/login', (req, res, next) => authController.login(req, res, next))
