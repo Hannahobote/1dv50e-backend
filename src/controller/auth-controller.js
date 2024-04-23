@@ -1,134 +1,89 @@
-import { Employee } from "../models/employee-model.js"
+import { Users } from '../models/users-model.js'
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
-import { Document } from "../models/document-model.js"
-import { Patient } from "../models/patient-model.js"
+
 
 export class AuthController {
 
-
-  async login(req, res, next) {
+  async read(req, res, next) {
     try {
-      // find user in database
-      const user = await Employee.findOne({ username: req.body.username })
-      // if database can find user
-      if (user) {
-        // compare password in db
-        const validPassword = await bcrypt.compare(req.body.password, user.password)
-
-        // if the password is valid, send access token.
-        if (validPassword) {
-
-          //generate an accesstoken and send it back
-          const payload = { user }
-          const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' })
-
-          res
-            .status(200)
-            .send({
-              accessToken,
-              user,
-              msg: 'Access token will expire after 10 minutes. Kindly log in again when it expires, to get a new token.',
-            })
-
-        } else {
-          res.status(401).send({ description: 'Credentials invalid or not provided.' })
-        }
-
-      } else {
-        res.status(404).send({ description: 'User does not exist' })
-      }
+      const allUsers = await Users.find({})
+      res
+        .status(200)
+        .send(allUsers)
     } catch (error) {
       next(error)
     }
   }
 
-  async logout(req, res, next) {
+  async create(req, res, next) {
+    try {
+      //register a user
+      //check if username is already registered
+      let usernameDuplicate = await Users.find({ username: req.body.username })
 
+      // if email or username is true/exists the thow error
+      if (usernameDuplicate[0] !== undefined) {
+        res.status(409).send({ description: 'a user with this username already exist.' })
+        return
+      }
+
+      // hash password
+      const hash = await bcrypt.hash(req.body.password, 10)
+
+      // create account
+      const employee = new Users({
+        username: req.body.username,
+        password: hash,
+      })
+
+      // save user
+      employee.save()
+
+      // send back id as respond
+      res.status(201).send({ employee })
+
+    } catch (error) {
+      next(error)
+      res.send(error)
+    }
   }
 
-  /**
-   * Checks if user is admin. This is used for manipulating patient info, employee info.
-   * Only admin is allowed to manipulate anther employee or patient info.
-   * @param {*} req  .
-   * @param {*} res  .
-   * @param {*} next .
-   */
-  async userPremissionAdmin(req, res, next) {
-    // check if user is admin
-    if (req.user.user.role === 'admin') {
-      next()
+  async login(req, res, next) {
+  try {
+    // find user in database
+    const user = await Users.findOne({ username: req.body.username })
+    // if database can find user
+    if (user) {
+      // compare password in db
+      const validPassword = await bcrypt.compare(req.body.password, user.password)
+
+      // if the password is valid, send access token.
+      if (validPassword) {
+
+        //generate an accesstoken and send it back
+        const payload = { user }
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '600s' })
+
+        res
+          .status(200)
+          .send({
+            accessToken,
+            user,
+            msg: 'Access token will expire after 10 minutes. Kindly log in again when it expires, to get a new token.',
+          })
+
+      } else {
+        res.status(401).send({ description: 'Credentials invalid or not provided.' })
+      }
+
     } else {
-      res
-        .status(400)
-        .send({ error: 'Not allowed: The user is not an admin and therefore cannot modify this resource.' })
+      res.status(404).send({ description: 'User does not exist' })
     }
+  } catch (error) {
+    next(error)
   }
-
-  /**
- * Checks if user is the creator of the docuemnt.
- * Employee is only allowed to manipulate documents they have created.
- *
- * @param {*} req  .
- * @param {*} res  .
- * @param {*} next .
- */
-  async userPremissionEmployeeDocument(req, res, next) {
-    try {
-      const document = await Document.findById({ _id: req.params.id })
-
-      if(document) {
-        // checks if signed in user is admin or creator of resource
-        if(document.author_id.toString() === req.user.user._id ||req.user.user.role == "admin" ) {
-          next()
-        } else {
-          res 
-            .status(400)
-            .send({ error: 'not allowed: user is not creator of this resource' })
-        }
-      } else {
-        res 
-          .status(404)
-          .send({error: 'Document not found'})
-      }
-      
-    } catch (error) {
-      res
-        .send(error.message)
-    }
-  }
-
-  /**
-   * Checks if current signed in user is kontakt man of the patient resource.
-   *
-   * @param {*} req .
-   * @param {*} res .
-   * @param {*} next .
-   */
-  async userPremissionEmployeePatient(req, res, next) {
-    try {
-      let patient = await Patient.find({ _id: req.params.id})
-      if(patient.length == 0) {
-        res 
-          .status(404)
-          .send({ error: 'User does not exist.' })
-    
-      } else {
-        
-        if(patient[0].kontaktman_id.toString() == req.user.user._id || req.user.user.role == "admin" ) {
-          next()
-        } else {
-          res 
-            .status(400)
-            .send({ error: 'not allowed: user is not kontakt man of this resource or an admin' })
-        }
-  
-      }
-    } catch (error) {
-      res 
-        .send(error.message)
-    }
-  }
+}
 
   /**
    * Authorize: give certain access to user. Cheks i user is logged in.
@@ -139,42 +94,42 @@ export class AuthController {
    * @returns 
    */
   async authorize(req, res, next) {
-    try {
-      const authHeader = req.headers['authorization']
-      const token = authHeader && authHeader.split(' ')[1]
+  try {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
 
-      if (token === null) {
-        return res.sendStatus(401)
-      }
-
-      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-          return res.sendStatus(403)
-        }
-        req.user = user
-        next()
-      })
-
-    } catch (error) {
-      next(error)
+    if (token === null) {
+      return res.sendStatus(401)
     }
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        return res.sendStatus(403)
+      }
+      req.user = user
+      next()
+    })
+
+  } catch (error) {
+    next(error)
   }
+}
 
 
   async currentUser(req, res, next) {
-    try {
+  try {
 
-      if(req.user.user) {
-        res
-          .status(200)
-          .send({current_user: req.user.user})
-      } else {
-        res
-          .status(404)
-          .send('There is no user signed in at the moment.')
-      }
-    } catch (error) {
-      next(error)
+    if (req.user.user) {
+      res
+        .status(200)
+        .send({ current_user: req.user.user })
+    } else {
+      res
+        .status(404)
+        .send('There is no user signed in at the moment.')
     }
+  } catch (error) {
+    next(error)
   }
+}
 }

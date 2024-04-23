@@ -4,6 +4,12 @@ export const router = express.Router()
 
 const authController = new AuthController()
 
+// read all user
+router.get('/', (req, res, next) => authController.read(req, res, next))
+
+// create a user
+router.post('/', (req, res, next) => authController.create(req, res, next))
+
 // register user
 router.post('/register', (req, res, next) => authController.register(req, res, next))
 
