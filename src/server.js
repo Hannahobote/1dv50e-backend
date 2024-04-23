@@ -9,7 +9,7 @@ import express from 'express'
 import logger from 'morgan'
 import { router as authRouter } from './routes/auth-route.js'
 //import { router as docRoute } from './routes/document-route.js'
-//import { router as patientRoute } from './routes/patient-route.js'
+import { router as cakeRoute } from './routes/cake-route.js'
 //import { router as employeeRoute } from './routes/employee-route.js'
 import cors from 'cors'
 
@@ -52,7 +52,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // Register routes.
-//app.use('/api/patients', patientRoute)
+app.use('/api/order/cake', cakeRoute)
 //app.use('/api/document', docRoute)
 app.use('/api/auth', authRouter)
 //app.use('/api/employee', employeeRoute)
