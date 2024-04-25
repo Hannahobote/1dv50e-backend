@@ -8,7 +8,7 @@
 import express from 'express'
 import logger from 'morgan'
 import { router as authRouter } from './routes/auth-route.js'
-//import { router as docRoute } from './routes/document-route.js'
+import { router as cheesecakeRouter } from './routes/cheesecake-route.js'
 import { router as cakeRoute } from './routes/cake-route.js'
 import { router as cupcakeRoute } from './routes/cupcake-route.js'
 
@@ -56,6 +56,7 @@ app.use(cors(corsOptions))
 // Register routes.
 app.use('/api/order/cake', cakeRoute)
 app.use('/api/order/cupcake', cupcakeRoute)
+app.use('/api/order/cheesecake', cheesecakeRouter)
 app.use('/api/auth', authRouter)
 
 // Error handler.
