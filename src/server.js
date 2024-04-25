@@ -7,6 +7,7 @@
 
 import express from 'express'
 import logger from 'morgan'
+import fileUpload from 'express-fileupload'
 import { router as authRouter } from './routes/auth-route.js'
 import { router as cheesecakeRouter } from './routes/cheesecake-route.js'
 import { router as cakeRoute } from './routes/cake-route.js'
@@ -46,6 +47,11 @@ app.use((req, res, next) => {
 
   next()
 })
+
+// save file
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+}));
 
 // enable cors to client
 const corsOptions = {

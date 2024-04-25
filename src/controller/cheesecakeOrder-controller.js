@@ -1,4 +1,6 @@
 import { CheesecakeOrder } from "../models/cheesecakeOrder-model.js"
+import { FileUploaderController } from "./fileUploader-controller.js"
+
 
 export class CheesecakeOrderController {
   async create(req, res, next) {
@@ -59,6 +61,10 @@ export class CheesecakeOrderController {
   async update(req, res, next) {
     try {
       if (await CheesecakeOrder.findById({ _id: req.params.id })) {
+        
+        let filecontroller = new FileUploaderController()
+        filecontroller.upload(req, res, next)
+        
 
         const result = await CheesecakeOrder.updateOne({ _id: req.params.id }, {
           name: req.body.name,
