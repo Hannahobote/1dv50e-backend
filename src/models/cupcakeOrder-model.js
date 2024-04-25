@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export const cakeOrderSchema = new mongoose.Schema({
+export const cupcakeOrderSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -25,16 +25,24 @@ export const cakeOrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  amount: {
+    type: Number,
+    required: true,
+  },
   taste: {
     type: String,
     required: true,
   },
-  filling: {
+  frosting: {
     type: String,
     required: true,
   },
   design: {
     type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
     required: true,
   },
   status: {
@@ -45,4 +53,4 @@ export const cakeOrderSchema = new mongoose.Schema({
   timestamps: true
 })
 
-export const CakeOrder = mongoose.models.CakeOrder || mongoose.model('CakeOrder', cakeOrderSchema);
+export const CupcakeOrder = mongoose.models.CupcakeOrder || mongoose.model('CupcakeOrder', cupcakeOrderSchema);
