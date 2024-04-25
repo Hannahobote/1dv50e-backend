@@ -75,7 +75,7 @@ export class CakeOrderController {
         // validate update
         if (result.acknowledged) {
           // send updated 
-          const updatedCakeOrder = await Patient.findOne({ _id: req.params.id })
+          const updatedCakeOrder = await CakeOrder.findOne({ _id: req.params.id })
           res
             .status(200)
             .send({ 'Updated cake order': updatedCakeOrder })
