@@ -1,3 +1,12 @@
+/**
+ * källhändvisa youtube
+ */
+
+//import fsExtra from "fs-extra/esm"
+import fs from 'fs'
+
+import path from "path"
+import { v4 as uuidv4 } from 'uuid';
 export class FileUploaderController {
 
   async upload(req, res, next) {
@@ -10,14 +19,19 @@ export class FileUploaderController {
       file.mv('./uploads/' + filename, function (err) {
         if (err) {
           res.send(err)
-        } else {
-          imagefilepath = `/uploads/${filename}`
-          res.send('File uploaded. The filepath is ' + imagefilepath)
         }
+
       })
+
+      //rename file, after file is moved.
+      let newFileName = `${uuidv4()}-` + filename;
+      imagefilepath = path.join('/uploads/', newFileName);
+
+      let uploadPath = path.join('/uploads/', filename);
+      fs.rename(uploadPath, imagefilepath)
+      console.log('new file name ', imagefilepath)
     }
     console.log(imagefilepath)
-    return imagefilepath
   }
 
 
