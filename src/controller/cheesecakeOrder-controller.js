@@ -1,6 +1,4 @@
 import { CheesecakeOrder } from "../models/cheesecakeOrder-model.js"
-import { FileUploaderController } from "./fileUploader-controller.js"
-
 
 export class CheesecakeOrderController {
   async create(req, res, next) {
@@ -14,7 +12,7 @@ export class CheesecakeOrderController {
         delivery_date: req.body.delivery_date,
         amount: req.body.amount,
         taste: req.body.taste,
-        design: req.body.design,
+        design: req.file.path, // save image path
         price: req.body.price,
         status: req.body.status
       })

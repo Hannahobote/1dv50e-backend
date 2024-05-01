@@ -9,12 +9,11 @@ import express from 'express'
 import logger from 'morgan'
 import cors from 'cors'
 import dotenv from 'dotenv'
-//import path from "path"
-//import fileUpload from 'express-fileupload'
 import { router as authRouter } from './routes/auth-route.js'
 import { router as cheesecakeRouter } from './routes/cheesecake-route.js'
 import { router as cakeRoute } from './routes/cake-route.js'
 import { router as cupcakeRoute } from './routes/cupcake-route.js'
+import { router as imageRouter } from './routes/image-route.js'
 import { connectDB } from './config/mongose.js'
 dotenv.config()
 
@@ -46,11 +45,6 @@ app.use((req, res, next) => {
   next()
 })
 
-// save file
-/*app.use(fileUpload({
-  limits: { fileSize: 50 * 1024 * 1024 },
-}));*/
-
 // enable cors to client
 const corsOptions = {
   origin: process.env.CORS
@@ -61,6 +55,7 @@ app.use(cors(corsOptions))
 app.use('/api/order/cake', cakeRoute)
 app.use('/api/order/cupcake', cupcakeRoute)
 app.use('/api/order/cheesecake', cheesecakeRouter)
+app.use('/api/image/', imageRouter)
 app.use('/api/auth', authRouter)
 
 // Error handler.

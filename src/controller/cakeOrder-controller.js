@@ -12,7 +12,7 @@ export class CakeOrderController {
         delivery_date: req.body.delivery_date,
         taste: req.body.taste,
         filling: req.body.filling,
-        design: req.body.design,
+        design: req.file.path, // save image path
         status: req.body.status
       })
 
@@ -68,7 +68,7 @@ export class CakeOrderController {
           delivery_date: req.body.delivery_date,
           taste: req.body.taste,
           filling: req.body.filling,
-          design: req.body.design,
+          design:  req.file.path, // save image path
           status: req.body.status
         })
 
