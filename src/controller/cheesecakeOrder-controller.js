@@ -14,7 +14,8 @@ export class CheesecakeOrderController {
         taste: req.body.taste,
         design: req.file.path, // save image path
         price: req.body.price,
-        status: req.body.status
+        status: req.body.status,
+        category: req.body.category
       })
 
       await cake.save()
@@ -72,7 +73,9 @@ export class CheesecakeOrderController {
           taste: req.body.taste,
           design: req.file.path, // save image path
           price: req.body.price,
-          status: req.body.status
+          status: req.body.status,
+          category: req.body.category
+
         })
 
         // validate update

@@ -13,9 +13,10 @@ export class CupcakeOrderController {
         amount: req.body.amount,
         taste: req.body.taste,
         frosting: req.body.frosting,
-        design: req.body.design,
+        design: req.file.path,
         price: req.body.price,
-        status: req.body.status
+        status: req.body.status,
+        category: req.body.category
       })
 
       await cake.save()
@@ -73,7 +74,9 @@ export class CupcakeOrderController {
           frosting: req.body.frosting,
           design: req.body.design,
           price: req.body.price,
-          status: req.body.status
+          status: req.body.status,
+          category: req.body.category
+
         })
 
         // validate update

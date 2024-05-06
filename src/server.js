@@ -14,6 +14,7 @@ import { router as cheesecakeRouter } from './routes/cheesecake-route.js'
 import { router as cakeRoute } from './routes/cake-route.js'
 import { router as cupcakeRoute } from './routes/cupcake-route.js'
 import { router as imageRouter } from './routes/image-route.js'
+import { router as ordersRoute } from './routes/orders-route.js'
 import { connectDB } from './config/mongose.js'
 dotenv.config()
 
@@ -55,7 +56,8 @@ app.use(cors(corsOptions))
 app.use('/api/order/cake', cakeRoute)
 app.use('/api/order/cupcake', cupcakeRoute)
 app.use('/api/order/cheesecake', cheesecakeRouter)
-app.use('/api/image/', imageRouter)
+app.use('/api/orders', ordersRoute)
+app.use('/api/image', imageRouter)
 app.use('/api/auth', authRouter)
 
 // Error handler.

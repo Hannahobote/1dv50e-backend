@@ -45,6 +45,10 @@ export const cheesecakeOrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  category: {
+    type: String,
+    required: true,
+  },
 }, {
   timestamps: true
 })

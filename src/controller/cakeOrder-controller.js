@@ -13,7 +13,9 @@ export class CakeOrderController {
         taste: req.body.taste,
         filling: req.body.filling,
         design: req.file.path, // save image path
-        status: req.body.status
+        status: req.body.status,
+        category: req.body.category
+
       })
 
       await cake.save()
@@ -69,7 +71,9 @@ export class CakeOrderController {
           taste: req.body.taste,
           filling: req.body.filling,
           design:  req.file.path, // save image path
-          status: req.body.status
+          status: req.body.status,
+          category: req.body.category
+
         })
 
         // validate update
