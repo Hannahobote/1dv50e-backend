@@ -2,6 +2,8 @@ import express from 'express'
 import { AuthController } from '../controller/auth-controller.js'
 import { ImageController } from '../controller/image-controller.js'
 import { upload } from '../controller/multerConfig.js'
+import path from "path"
+import fs from "fs"
 const image = new ImageController()
 const auth = new AuthController()
 export const router = express.Router()
@@ -14,6 +16,18 @@ router.get('/:id', auth.authorize, (req, res, next) => image.readOne(req, res , 
 
 // read all 
 router.get('/', auth.authorize, (req, res, next) => image.readAll(req, res , next))
+
+// read image in server
+/*router.get('/uploads/:filename', auth.authorize, (req, res, next) => {
+  const { filename } = req.params;
+  const filePath = path.resolve('uploads', filename);
+  
+  // Send the image file as a response
+  res.sendFile(filePath);
+})*/
+
+// read image in server
+router.get('/uploads/:filename', (req, res, next) => image.imageInServer(req, res, next))
 
 // update one 
 router.patch('/:id', auth.authorize, upload.single('image'), (req, res, next) => image.update(req, res , next))

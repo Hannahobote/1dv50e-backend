@@ -1,4 +1,7 @@
 import { Image } from "../models/image-model.js"
+import path from "path"
+import fs from "fs"
+
 
 export class ImageController {
   async create(req, res, next) {
@@ -48,6 +51,35 @@ export class ImageController {
       next(error)
     }
   }
+
+  async imageInServer2(req, res, next) {
+    try {
+      const img  = `../../uploads/${req.params.id}`
+      console.log(img)
+      if (!img) {
+        res
+          .status(200)
+          .send(img)
+      } else {
+        res
+          .status(404)
+          .send('Image not found')
+      }
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  }
+
+  async imageInServer(req, res, next) {
+    const { filename } = req.params;
+    const filePath = path.resolve('uploads', filename);
+    
+    // Send the image file as a response
+    res.sendFile(filePath);
+  }
+  
+
 
   async update(req, res, next) {
     try {
