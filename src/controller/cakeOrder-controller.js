@@ -3,6 +3,9 @@ import { CakeOrder } from "../models/cakeOrder-model.js"
 export class CakeOrderController {
   async create(req, res, next) {
     try {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded. You cannot save order without a design.');
+      }
       const cake = new CakeOrder({
         name: req.body.name,
         surname: req.body.surname,
@@ -61,6 +64,13 @@ export class CakeOrderController {
     try {
       if (await CakeOrder.findById({ _id: req.params.id })) {
 
+        let imagePath;
+        if (!req.files || Object.keys(req.files).length === 0) {
+          imagePath = null
+        } else {
+          imagePath = req.file.path // save image path
+        }
+
         const result = await CakeOrder.updateOne({ _id: req.params.id }, {
           name: req.body.name,
           surname: req.body.surname,
@@ -70,7 +80,7 @@ export class CakeOrderController {
           delivery_date: req.body.delivery_date,
           taste: req.body.taste,
           filling: req.body.filling,
-          design:  req.file.path, // save image path
+          design: imagePath,
           status: req.body.status,
           category: req.body.category
 
