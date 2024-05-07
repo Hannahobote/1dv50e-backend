@@ -7,7 +7,7 @@ const cake = new CupcakeOrderController()
 const auth = new AuthController()
 
 // create
-router.post('/', auth.authorize, upload.single('design'), (req, res, next) => cake.create(req, res, next))
+router.post('/', upload.single('design'), (req, res, next) => cake.create(req, res, next))
 
 // Read one
 router.get('/:id', auth.authorize, (req, res, next) => cake.readOne(req, res , next))
