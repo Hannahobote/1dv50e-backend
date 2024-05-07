@@ -47,11 +47,12 @@ app.use((req, res, next) => {
 })
 
 // enable cors to client
-const corsOptions = {
+/*const corsOptions = {
   origin: process.env.CORS
 }
-app.use(cors(corsOptions))
+app.use(cors(corsOptions))*/
 
+app.use(cors());
 // Register routes.
 app.use('/api/order/cake', cakeRoute)
 app.use('/api/order/cupcake', cupcakeRoute)

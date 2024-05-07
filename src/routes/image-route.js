@@ -15,16 +15,7 @@ router.post('/', auth.authorize, upload.single('image'), (req, res, next) => ima
 router.get('/:id', auth.authorize, (req, res, next) => image.readOne(req, res , next))
 
 // read all 
-router.get('/', auth.authorize, (req, res, next) => image.readAll(req, res , next))
-
-// read image in server
-/*router.get('/uploads/:filename', auth.authorize, (req, res, next) => {
-  const { filename } = req.params;
-  const filePath = path.resolve('uploads', filename);
-  
-  // Send the image file as a response
-  res.sendFile(filePath);
-})*/
+router.get('/', (req, res, next) => image.readAll(req, res , next))
 
 // read image in server
 router.get('/uploads/:filename', (req, res, next) => image.imageInServer(req, res, next))
