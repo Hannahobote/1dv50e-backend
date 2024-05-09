@@ -10,7 +10,7 @@ const auth = new AuthController()
 router.post('/', upload.single('design'), (req, res, next) => cake.create(req, res, next))
 
 // Read one
-router.get('/:id', auth.authorize, (req, res, next) => cake.readOne(req, res , next))
+router.get('/:id', (req, res, next) => cake.readOne(req, res , next))
 
 // read all 
 router.get('/', auth.authorize, (req, res, next) => cake.readAll(req, res , next))
