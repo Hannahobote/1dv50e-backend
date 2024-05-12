@@ -59,9 +59,16 @@ export class CheesecakeOrderController {
 
   async update(req, res, next) {
     try {
-      if (await CheesecakeOrder.findById({ _id: req.params.id })) {
 
-        // save image path in the update.
+      const prevOrder = await CheesecakeOrder.findById({ _id: req.params.id })
+      if (prevOrder) {
+        let imagePath;
+        if (!req.file) {
+          imagePath = prevOrder.design
+        } else {
+          imagePath = req.file.path // save image path
+        }
+
         const result = await CheesecakeOrder.updateOne({ _id: req.params.id }, {
           name: req.body.name,
           surname: req.body.surname,
@@ -71,7 +78,7 @@ export class CheesecakeOrderController {
           delivery_date: req.body.delivery_date,
           amount: req.body.amount,
           taste: req.body.taste,
-          design: req.file.path, // save image path
+          design: imagePath, // save image path
           price: req.body.price,
           status: req.body.status,
           category: req.body.category

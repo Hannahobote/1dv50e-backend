@@ -62,11 +62,12 @@ export class CakeOrderController {
 
   async update(req, res, next) {
     try {
-      if (await CakeOrder.findById({ _id: req.params.id })) {
+      const prevCakeOrder = await CakeOrder.findById({ _id: req.params.id })
+      if (prevCakeOrder) {
 
         let imagePath;
         if (!req.file) {
-          imagePath = null
+          imagePath = prevCakeOrder.design
         } else {
           imagePath = req.file.path // save image path
         }

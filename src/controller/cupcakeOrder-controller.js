@@ -60,7 +60,15 @@ export class CupcakeOrderController {
 
   async update(req, res, next) {
     try {
-      if (await CupcakeOrder.findById({ _id: req.params.id })) {
+      const prevOrder = await CupcakeOrder.findById({ _id: req.params.id })
+      if (prevOrder) {
+
+        let imagePath;
+        if (!req.file) {
+          imagePath = prevOrder.design
+        } else {
+          imagePath = req.file.path // save image path
+        }
 
         const result = await CupcakeOrder.updateOne({ _id: req.params.id }, {
           name: req.body.name,
@@ -72,7 +80,7 @@ export class CupcakeOrderController {
           amount: req.body.amount,
           taste: req.body.taste,
           frosting: req.body.frosting,
-          design: req.body.design,
+          design:imagePath,
           price: req.body.price,
           status: req.body.status,
           category: req.body.category
