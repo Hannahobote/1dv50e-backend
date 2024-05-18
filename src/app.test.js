@@ -10,13 +10,12 @@ describe('Auth API', () => {
   test(' POST /api/auth/login -> Login a user', async () => {
     const response = await request(app)
       .post('/api/auth/login')
-      .send({ username: 'chef', password: process.env.PASSWORD });
+      .send({ username: 'aga240423-19', password: process.env.PASSWORD });
     expect(response.status).toBe(200);
     bearerToken = response.body.accessToken
     expect(response.body).toHaveProperty('msg')
     expect(response.body).toHaveProperty('accessToken')
     expect(response.body).toHaveProperty('user')
-
   })
 
   test('POST api/auth -> Should give 404 if user doesnt exist', async () => {
@@ -29,79 +28,204 @@ describe('Auth API', () => {
   test('POST /api/auth -> Should give 401 if credentials are incorrect ', async () => {
     const response = await request(app)
       .post('/api/auth/login')
-      .send({ username: 'chef', password: '1234567' });
+      .send({ username: 'aga240423-19', password: '1234567' });
     expect(response.status).toBe(401);
   })
 })
 
 
-describe('Employee API', () => {
-  test('GET /api/employee -> should return a list of all employees', async () => {
+describe('Orders API', () => {
+  test('GET /api/orders -> should return all orders', async () => {
     const response = await request(app)
-      .get('/api/employee')
+      .get('/api/orders')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/employee/:id -> should return one employee (this should fail if user is not signed in)', async () => {
+  test('GET /api/orders -> should no return all orders, becase we are not signed in', async () => {
     const response = await request(app)
-      .get('api/employee/6446cb61dc92030c315b5744')
-      .set('Authorization', `Bearer ${bearerToken}`)
-    expect(response.status).toBe(200);
-
-    expect(response.body).toEqual(expect.objectContaining({
-      _id: expect.any(String),
-      username: expect.any(String),
-      password: expect.any(String),
-      name: expect.any(String),
-      surname: expect.any(String),
-      personnr: expect.any(String),
-      worknr: expect.any(Number),
-      role: expect.any(String),
-      createdAt: expect.any(Date),
-      updatedAt: expect.any(Date),
-    }))
+      .get('/api/orders')
+      //.set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(401);
   })
 
+})
 
-  test('GET /api/employee/:id -> should return 404 if employee does not exist', async () => {
+describe('Cake orders API', () => {
+
+  test('GET /api/order/cake -> should return all cake orders', async () => {
     const response = await request(app)
-      .get('api/employee/6446cb61dc92030c315b5748')
+      .get('/api/order/cake')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/order/cake -> should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .get('/api/order/cake')
+     // .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(401);
+  })
+
+  test('GET /api/order/cake/:id -> should return cake one order', async () => {
+    const response = await request(app)
+      .get('/api/order/cake/6627f56ce01eb2a96fd533d3')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/order/cake/:id -> should return 404 if cake order does not exist', async () => {
+    const response = await request(app)
+      .get('/api/order/cake/6446cb61dc92030c315b5744')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(404);
   })
 
-
-  // mock database for this to work
-  test('POST /api/employee -> should return 201 + new employee details when employee has been created', async () => {
-
-
-
+  
+  test('PATCH /api/order/cake/:id -> Should not update, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .patch('/api/order/cake/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
   })
 
-  // mock database for this to work
-  test('GET /api/employee -> should return 409 if we try to create employee with the same work number, personr, username', async () => {
-
+  test('DELETE /api/order/cake/:id -> Should not DELETE, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .delete('/api/order/cake/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
   })
 
-  // mock database for this to work
-  test('PUT /api/employee/:id -> should return 200 + updated employee when member has been updated', async () => {
+})
 
+describe('Cheesecake orders API', () => {
+
+  test('GET /api/order/cheesecake -> should return all cake orders', async () => {
+    const response = await request(app)
+      .get('/api/order/cheesecake')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
   })
 
-  // mock database for this to work
-  test('PUT /api/employee/:id -> should return 404 of we try to update a member that does not exist', async () => {
-
+  test('GET /api/order/cheesecake -> should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .get('/api/order/cheesecake')
+     // .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(401);
   })
 
-  // mock database for this to work
-  test('DELETE /api/employee/:id -> should return 204 when employee has been deleted', async () => {
 
+  test('GET /api/order/cheesecake/:id -> should return cake one order', async () => {
+    const response = await request(app)
+      .get('/api/order/cheesecake/6642378e5fb74b5190c56e41')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
   })
 
-  // mock database for this to work
-  test('DELETE /api/employee/:id -> should return 404 if employee does not exist', async () => {
+  test('GET /api/order/cheesecake/:id -> should return 404 if cake order does not exist', async () => {
+    const response = await request(app)
+      .get('/api/order/cheesecake/6446cb61dc92030c315b5744')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(404);
+  })
 
+  test('PATCH /api/order/cheesecake/:id -> Should not update, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .patch('/api/order/cheesecake/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
+  })
+
+  test('DELETE /api/order/cheesecake/:id -> Should not DELETE, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .delete('/api/order/cheesecake/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
+  })
+
+})
+
+describe('Cupcake orders API', () => {
+
+  test('GET /api/order/cupcake -> should return all cake orders', async () => {
+    const response = await request(app)
+      .get('/api/order/cupcake')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/order/cupcake -> should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .get('/api/order/cupcake')
+     // .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(401);
+  })
+
+
+  test('GET /api/order/cupcake/:id -> should return cake one order', async () => {
+    const response = await request(app)
+      .get('/api/order/cupcake/6648bdc622ac3ee2d0fde0f8')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/order/cupcake/:id -> should return 404 if cake order does not exist', async () => {
+    const response = await request(app)
+      .get('/api/order/cupcake/6446cb61dc92030c315b5744')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(404);
+  })
+
+  test('PATCH /api/order/cupcake/:id -> Should not update, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .patch('/api/order/cupcake/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
+  })
+
+  test('DELETE /api/order/cupcake/:id -> Should not DELETE, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .delete('/api/order/cupcake/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
+  })
+
+})
+
+describe('Image API', () => {
+
+  test('GET /api/image -> should return all cake image', async () => {
+    const response = await request(app)
+      .get('/api/image')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/image -> should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .get('/api/image')
+     // .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(401);
+  })
+
+  test('GET /api/image/:id -> should return cake one order', async () => {
+    const response = await request(app)
+      .get('/api/image/6648bdc622ac3ee2d0fde0f8')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/image/:id -> should return 404 if cake order does not exist', async () => {
+    const response = await request(app)
+      .get('/api/image/6446cb61dc92030c315b5744')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(404);
+  })
+
+  test('PATCH /api/image/:id -> Should not update, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .patch('/api/image/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
+  })
+
+  test('DELETE /api/image/:id -> Should not DELETE, should return 401 because we are not signed in', async () => {
+    const response = await request(app)
+      .delete('/api/image/6627f56ce01eb2a96fd533d3')
+    expect(response.status).toBe(401);
   })
 
 })
