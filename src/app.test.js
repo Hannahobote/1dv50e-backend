@@ -188,28 +188,28 @@ describe('Cupcake orders API', () => {
 
 describe('Image API', () => {
 
-  test('GET /api/image -> should return all cake image', async () => {
+  test('GET /api/image -> should return all images', async () => {
     const response = await request(app)
       .get('/api/image')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/image -> should return 401 because we are not signed in', async () => {
-    const response = await request(app)
-      .get('/api/image')
-     // .set('Authorization', `Bearer ${bearerToken}`)
-    expect(response.status).toBe(401);
-  })
-
-  test('GET /api/image/:id -> should return cake one order', async () => {
+  test('GET /api/image/:id -> should return one image', async () => {
     const response = await request(app)
       .get('/api/image/6648bdc622ac3ee2d0fde0f8')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/image/:id -> should return 404 if cake order does not exist', async () => {
+  test('GET /api/image/uploads/:filename -> should return one image from server', async () => {
+    const response = await request(app)
+      .get('/api/image/uploads/6648bdc622ac3ee2d0fde0f8')
+      .set('Authorization', `Bearer ${bearerToken}`)
+    expect(response.status).toBe(200);
+  })
+
+  test('GET /api/image/:id -> should return 404 if image does not exist', async () => {
     const response = await request(app)
       .get('/api/image/6446cb61dc92030c315b5744')
       .set('Authorization', `Bearer ${bearerToken}`)
