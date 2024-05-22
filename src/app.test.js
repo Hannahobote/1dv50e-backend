@@ -42,7 +42,7 @@ describe('Orders API', () => {
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/orders -> should no return all orders, becase we are not signed in', async () => {
+  test('GET /api/orders -> should not return all orders, becase we are not signed in', async () => {
     const response = await request(app)
       .get('/api/orders')
       //.set('Authorization', `Bearer ${bearerToken}`)
@@ -67,7 +67,7 @@ describe('Cake orders API', () => {
     expect(response.status).toBe(401);
   })
 
-  test('GET /api/order/cake/:id -> should return cake one order', async () => {
+  test('GET /api/order/cake/:id -> should return one cake order', async () => {
     const response = await request(app)
       .get('/api/order/cake/6627f56ce01eb2a96fd533d3')
       .set('Authorization', `Bearer ${bearerToken}`)
@@ -98,7 +98,7 @@ describe('Cake orders API', () => {
 
 describe('Cheesecake orders API', () => {
 
-  test('GET /api/order/cheesecake -> should return all cake orders', async () => {
+  test('GET /api/order/cheesecake -> should return all Cheesecake orders', async () => {
     const response = await request(app)
       .get('/api/order/cheesecake')
       .set('Authorization', `Bearer ${bearerToken}`)
@@ -113,14 +113,14 @@ describe('Cheesecake orders API', () => {
   })
 
 
-  test('GET /api/order/cheesecake/:id -> should return cake one order', async () => {
+  test('GET /api/order/cheesecake/:id -> should return one Cheesecake order', async () => {
     const response = await request(app)
       .get('/api/order/cheesecake/6642378e5fb74b5190c56e41')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/order/cheesecake/:id -> should return 404 if cake order does not exist', async () => {
+  test('GET /api/order/cheesecake/:id -> should return 404 if Cheesecake order does not exist', async () => {
     const response = await request(app)
       .get('/api/order/cheesecake/6446cb61dc92030c315b5744')
       .set('Authorization', `Bearer ${bearerToken}`)
@@ -143,7 +143,7 @@ describe('Cheesecake orders API', () => {
 
 describe('Cupcake orders API', () => {
 
-  test('GET /api/order/cupcake -> should return all cake orders', async () => {
+  test('GET /api/order/cupcake -> should return all cupcake orders', async () => {
     const response = await request(app)
       .get('/api/order/cupcake')
       .set('Authorization', `Bearer ${bearerToken}`)
@@ -158,14 +158,14 @@ describe('Cupcake orders API', () => {
   })
 
 
-  test('GET /api/order/cupcake/:id -> should return cake one order', async () => {
+  test('GET /api/order/cupcake/:id -> should return one cupcake order', async () => {
     const response = await request(app)
       .get('/api/order/cupcake/6648bdc622ac3ee2d0fde0f8')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/order/cupcake/:id -> should return 404 if cake order does not exist', async () => {
+  test('GET /api/order/cupcake/:id -> should return 404 if cupcake order does not exist', async () => {
     const response = await request(app)
       .get('/api/order/cupcake/6446cb61dc92030c315b5744')
       .set('Authorization', `Bearer ${bearerToken}`)
@@ -195,16 +195,16 @@ describe('Image API', () => {
     expect(response.status).toBe(200);
   })
 
-  test('GET /api/image/:id -> should return one image', async () => {
+  test('GET /api/image/:id -> should return one image adress', async () => {
     const response = await request(app)
-      .get('/api/image/6648bdc622ac3ee2d0fde0f8')
+      .get('/api/image/663225ce40f6c896050546ab')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
 
   test('GET /api/image/uploads/:filename -> should return one image from server', async () => {
     const response = await request(app)
-      .get('/api/image/uploads/6648bdc622ac3ee2d0fde0f8')
+      .get('/api/image/uploads/2e148bd8-88be-48d8-af71-40a8477798d3-cake.png')
       .set('Authorization', `Bearer ${bearerToken}`)
     expect(response.status).toBe(200);
   })
