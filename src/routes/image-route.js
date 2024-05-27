@@ -17,8 +17,12 @@ router.get('/:id', auth.authorize, (req, res, next) => image.readOne(req, res , 
 // read all 
 router.get('/', (req, res, next) => image.readAll(req, res , next))
 
+// read all images in server
+router.get('/uploads', (req, res, next) => image.imageInServer(req, res, next))
+
 // read image in server
 router.get('/uploads/:filename', (req, res, next) => image.imageInServer(req, res, next))
+
 
 // update one 
 router.patch('/:id', auth.authorize, upload.single('image'), (req, res, next) => image.update(req, res , next))
