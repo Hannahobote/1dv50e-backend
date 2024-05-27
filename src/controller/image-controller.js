@@ -71,6 +71,26 @@ export class ImageController {
     }
   }
 
+
+  async readAllImgInServer(req, res, next) {
+    try {
+      const img  = `../../uploads`
+      console.log(img)
+      if (!img) {
+        res
+          .status(200)
+          .send(img)
+      } else {
+        res
+          .status(404)
+          .send('Images not found')
+      }
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  }
+
   async imageInServer(req, res, next) {
     const { filename } = req.params;
     const filePath = path.resolve('uploads', filename);
