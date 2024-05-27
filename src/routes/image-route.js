@@ -18,7 +18,7 @@ router.get('/:id', auth.authorize, (req, res, next) => image.readOne(req, res , 
 router.get('/', (req, res, next) => image.readAll(req, res , next))
 
 // read all images in server
-router.get('/uploads', (req, res, next) => image.imageInServer(req, res, next))
+//router.get('/upload', (req, res, next) => image.readAllImgInServer(req, res, next))
 
 // read image in server
 router.get('/uploads/:filename', (req, res, next) => image.imageInServer(req, res, next))

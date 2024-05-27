@@ -1,7 +1,7 @@
 import { Image } from "../models/image-model.js"
 import path from "path"
 import fs from "fs"
-
+import { fileURLToPath } from 'url'
 
 export class ImageController {
   async create(req, res, next) {
@@ -71,26 +71,6 @@ export class ImageController {
     }
   }
 
-
-  async readAllImgInServer(req, res, next) {
-    try {
-      const img  = `../../uploads`
-      console.log(img)
-      if (!img) {
-        res
-          .status(200)
-          .send(img)
-      } else {
-        res
-          .status(404)
-          .send('Images not found')
-      }
-    } catch (error) {
-      console.log(error)
-      next(error)
-    }
-  }
-
   async imageInServer(req, res, next) {
     const { filename } = req.params;
     const filePath = path.resolve('uploads', filename);
@@ -153,5 +133,29 @@ export class ImageController {
     } catch (error) {
       next(error)
     }
+  }
+}
+
+export async function readAllImgInServer(req, res, next) {
+  try {
+    // Convert import.meta.url to a file path
+    const __filename = fileURLToPath(import.meta.url)
+    const __dirname = path.dirname(__filename)
+    const directoryPath = path.join(__dirname, '../../uploads')
+    console.log(`Reading images from ${directoryPath}`)
+
+    fs.readdir(directoryPath, (err, files) => {
+      if (err) {
+        console.log('Unable to scan directory: ' + err)
+        res.status(500).send('Unable to scan directory')
+      } else if (files.length === 0) {
+        res.status(404).send('No images found')
+      } else {
+        res.status(200).send(files)
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    next(error)
   }
 }

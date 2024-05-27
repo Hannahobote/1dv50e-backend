@@ -16,6 +16,7 @@ import { router as cupcakeRoute } from './routes/cupcake-route.js'
 import { router as imageRouter } from './routes/image-route.js'
 import { router as ordersRoute } from './routes/orders-route.js'
 import { connectDB } from './config/mongose.js'
+import { readAllImgInServer } from './controller/image-controller.js'
 dotenv.config()
 
 
@@ -60,6 +61,8 @@ app.use('/api/order/cheesecake', cheesecakeRouter)
 app.use('/api/orders', ordersRoute)
 app.use('/api/image', imageRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/uploads', readAllImgInServer)
+
 
 // Error handler.
 app.use(function (err, req, res, next) {
